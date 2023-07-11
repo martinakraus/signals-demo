@@ -14,7 +14,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http);
 }
 
-if ( environment.production ) {
+if (environment.production) {
     enableProdMode();
 }
 

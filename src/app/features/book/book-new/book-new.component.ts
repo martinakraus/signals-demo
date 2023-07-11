@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Book } from '../models/book';
 import { BookApiService } from '../services/book-api.service';
 import { CommonModule } from '@angular/common';
+import { TitleService } from "../../../services/title.service";
 
 @Component({
     selector: 'app-book-new',
@@ -16,6 +17,7 @@ export class BookNewComponent {
     newForm = this.buildForm();
 
     constructor(private readonly form: FormBuilder, private readonly bookApiService: BookApiService, private readonly router: Router) {
+        inject(TitleService).setAppTitle('Create Book');
     }
 
     create() {

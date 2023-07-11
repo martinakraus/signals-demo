@@ -1,5 +1,5 @@
-<ng-container *ngIf="books$ | async as books; else noBooks">
-    <app-book-card *ngFor="let book of books; let i = index"
+<ng-container *ngIf="books().length; else noBooks">
+    <app-book-card *ngFor="let book of books(); let i = index"
                    [id]="i"
                    [content]="book"
                    (detailClick)="navigateToDetail($event)"

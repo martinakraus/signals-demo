@@ -8,7 +8,7 @@
       <button routerLink="/books/new" mat-menu-item>Neues Buch anlegen</button>
     </mat-menu>
     <span class="spacer"></span>
-    <span routerLink="/">{{ "APP_TITLE" | translate }}</span>
+    <span routerLink="/">{{ appTitle() }}</span>
     <span class="spacer"></span>
     <mat-slide-toggle [formControl]="toggleControl" class="mr-8">
     </mat-slide-toggle>

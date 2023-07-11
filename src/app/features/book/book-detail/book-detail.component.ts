@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, Injector, runInInjectionContext } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { BookApiService } from '../services/book-api.service';
 import { Book } from '../models/book';
-import { Observable, switchMap } from 'rxjs';
+import { Observable, switchMap, tap } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { toObservable } from "@angular/core/rxjs-interop";
+import { MatButtonModule } from "@angular/material/button";
+import { TitleService } from "../../../services/title.service";
 
 @Component({
     selector: 'app-book-detail',
@@ -14,16 +16,18 @@ import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/lega
     imports: [ TranslateModule, CommonModule, MatButtonModule, RouterLink ],
     styleUrls: [ './book-detail.component.scss' ],
 })
-export class BookDetailComponent implements OnInit {
-    book$!: Observable<Book>;
+export class BookDetailComponent {
+    titleService = inject(TitleService);
+    injector = inject(Injector);
+    bookApiService = inject(BookApiService);
 
-    constructor(private readonly route: ActivatedRoute,
-                private readonly bookApiService: BookApiService) {
-    }
-
-    ngOnInit(): void {
-        this.book$ = this.route.params.pipe(
-            switchMap((params) => this.bookApiService.getByIsbn(params[ 'isbn' ])),
-        );
-    }
+    book$: Observable<Book> = inject(ActivatedRoute).params.pipe(
+        switchMap((params) => {
+            return runInInjectionContext(this.injector, () => toObservable(this.bookApiService.getByIsbn(params['isbn']))
+            )
+        }),
+        tap((book) => this.titleService.setAppTitle(book.title))
+    );
 }
+
+
