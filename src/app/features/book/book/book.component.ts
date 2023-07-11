@@ -5,6 +5,8 @@ import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { BookCardComponent } from '../book-card/book-card.component';
 import { CommonModule } from '@angular/common';
+import { Title } from "@angular/platform-browser";
+import { TitleService } from "../../../services/title.service";
 
 @Component({
     selector: 'app-book',
@@ -18,11 +20,13 @@ export class BookComponent implements OnInit {
     subscription!: Subscription;
 
     constructor(private readonly bookApiService: BookApiService,
-                private readonly router: Router) {
+                private readonly router: Router,
+                private readonly titleService: TitleService) {
     }
 
     ngOnInit(): void {
         this.books$ = this.bookApiService.getAll();
+        this.titleService.setAppTitle('Bookmonkey-App')
     }
 
     navigateToDetail(book: Book) {
